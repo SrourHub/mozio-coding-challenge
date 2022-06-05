@@ -40,7 +40,7 @@ def provider_details(request, id,format=None):
 
     elif request.method == 'DELETE':
         provider.delete()
-        return Response(status = status.HTTP_200_OK)
+        return Response(id, status = status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def service_area_list(request,format=None):
@@ -65,19 +65,19 @@ def service_area_details(request, id,format=None):
         return Response(status = status.HTTP_200_OK)
 
     if request.method == 'GET':
-        serializer = ServiceArea(service_area)
+        serializer = ServiceAreaSerializer(service_area)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        serializer = ServiceArea(service_area, data=request.data)
+        serializer = ServiceAreaSerializer(service_area, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         service_area.delete()
-        return Response(status = status.HTTP_200_OK)
+        return Response(id, status = status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def service_areas_that_contain_given_lat_lng(request,format=None):
     point = Point(float(request.data['lat']),float(request.data['lng']))
     service_areas = ServiceArea.objects.all()

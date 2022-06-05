@@ -10,7 +10,7 @@ urlpatterns = [
     path('providers/<int:id>', views.provider_details),
     path('service_areas/', views.service_area_list),
     path('service_areas/<int:id>', views.service_area_details),
-    path('service_areas/contain_polygon/', views.service_areas_that_contain_given_lat_lng)
+    path('service_areas/contain_point/', views.service_areas_that_contain_given_lat_lng)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
