@@ -6,7 +6,7 @@ class ProviderSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'email', 'phone_number', 'language', 'currency']
 
 class ServiceAreaSerializer(serializers.ModelSerializer):
-
+    provider_name = serializers.ReadOnlyField(source="provider.name")
     class Meta:
         model = ServiceArea
-        fields = ['id', 'name', 'price', 'geojson_information', 'provider']
+        fields = ['id', 'name', 'price', 'geojson_information', 'provider', 'provider_name']
