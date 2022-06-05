@@ -8,7 +8,11 @@ from shapely.geometry import Point, Polygon
 
 @api_view(['GET', 'POST'])
 def provider_list(request, format=None):
+    """
+    If the request is a GET, return a list of all providers. 
+    If the request is a POST, create a new provider
 
+    """
     if request.method == 'GET':
         providers = Provider.objects.all()
         serializer = ProviderSerializer(providers, many=True)
@@ -22,7 +26,14 @@ def provider_list(request, format=None):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def provider_details(request, id,format=None):
+    """
+    If the request is a GET, return the provider with the given id. 
 
+    If the request is a PUT, update the details of the provider with the given input data
+
+    If the request is a DELETE, delete the provider from the database
+
+    """
     try:
         provider = Provider.objects.get(pk=id)
     except Provider.DoesNotExist:
@@ -44,6 +55,10 @@ def provider_details(request, id,format=None):
 
 @api_view(['GET', 'POST'])
 def service_area_list(request,format=None):
+    """
+    If the request is a GET, return all the service areas. 
+    If the request is a POST, create a new service area.
+    """
 
     if request.method == 'GET':
         service_areas = ServiceArea.objects.all()
@@ -58,7 +73,13 @@ def service_area_list(request,format=None):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def service_area_details(request, id,format=None):
+    """
+    If the request is a GET, return the service area with the given id. 
 
+    If the request is a PUT, update the details of the service area with the given input data
+
+    If the request is a DELETE, delete the service area from the database
+    """
     try:
         service_area = ServiceArea.objects.get(pk=id)
     except ServiceArea.DoesNotExist:
@@ -79,6 +100,9 @@ def service_area_details(request, id,format=None):
 
 @api_view(['GET', 'POST'])
 def service_areas_that_contain_given_lat_lng(request,format=None):
+    """
+    It takes a lat and lng as input, and returns a list of service areas that contain that point
+    """
     point = Point(float(request.data['lat']),float(request.data['lng']))
     service_areas = ServiceArea.objects.all()
     serializer = ServiceAreaSerializer(service_areas, many = True)
