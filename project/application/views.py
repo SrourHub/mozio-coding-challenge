@@ -1,0 +1,84 @@
+from django.shortcuts import render
+from .models import Provider, ServiceArea
+from .serializers import ProviderSerializer, ServiceAreaSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+@api_view(['GET', 'POST'])
+def provider_list(request, format=None):
+
+    if request.method == 'GET':
+        providers = Provider.objects.all()
+        serializer = ProviderSerializer(providers, many=True)
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        serializer = ProviderSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def provider_details(request, id,format=None):
+
+    try:
+        provider = Provider.objects.get(pk=id)
+    except Provider.DoesNotExist:
+        return Response(status= status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ProviderSerializer(provider)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ProviderSerializer(provider, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        provider.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def service_area_list(request,format=None):
+
+    if request.method == 'GET':
+        service_areas = ServiceArea.objects.all()
+        serializer = ServiceAreaSerializer(service_areas, many = True)
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        serializer = ServiceAreaSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def service_area_details(request, id,format=None):
+
+    try:
+        service_area = ServiceArea.objects.get(pk=id)
+    except ServiceArea.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ServiceArea(service_area)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ServiceArea(service_area, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'Delete':
+        service_area.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
