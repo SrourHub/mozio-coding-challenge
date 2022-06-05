@@ -85,15 +85,15 @@ def service_areas_that_contain_given_lat_lng(request,lat,lng,format=None):
     service_areas = ServiceArea.objects.all()
     serializer = ServiceAreaSerializer(service_areas, many = True)
 
-    service_areas_that_contain_polygon = []
+    service_areas_that_contain_point = []
     for service_area in serializer.data:
         service_area = dict(service_area)
         coordinates = service_area['geojson_information']['coordinates']
         polygon = Polygon([tuple(x) for x in coordinates])
         if point.within(polygon):
-            service_areas_that_contain_polygon.append({'polygon_name': service_area['name'],'provider_name':service_area['provider_name'],'price':service_area['price']})
+            service_areas_that_contain_point.append({'polygon_name': service_area['name'],'provider_name':service_area['provider_name'],'price':service_area['price']})
 
-    return Response(service_areas_that_contain_polygon, status=status.HTTP_200_OK)
+    return Response(service_areas_that_contain_point, status=status.HTTP_200_OK)
 
 
 
