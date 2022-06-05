@@ -256,13 +256,8 @@ class ServiceAreaTestCase(APITestCase):
         if serializer.is_valid():
             serializer.save()
 
-        data = {'lat': 20.1, 'lng': 20.2}
-        response = self.client.post("/service_areas/contain_point/", data)
+        response = self.client.get("/service_areas/contain_point/20.1/20.2")
         self.assertEqual(len(response.json()), 1)
-
-        data = {'lat': 50, 'lng': 40}
-        response = self.client.post("/service_areas/contain_point/", data)
-        self.assertEqual(len(response.json()), 0)
 
 
         
