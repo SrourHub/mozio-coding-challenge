@@ -1,5 +1,3 @@
-from ast import Pass
-import json
 from django.shortcuts import render
 from .models import Provider, ServiceArea
 from .serializers import ProviderSerializer, ServiceAreaSerializer
@@ -80,8 +78,8 @@ def service_area_details(request, id,format=None):
         return Response(status = status.HTTP_200_OK)
 
 @api_view(['GET'])
-def service_areas_that_contain_given_lat_lng(request,lat,lng,format=None):
-    point = Point(float(lat),float(lng))
+def service_areas_that_contain_given_lat_lng(request,format=None):
+    point = Point(float(request.data['lat']),float(request.data['lng']))
     service_areas = ServiceArea.objects.all()
     serializer = ServiceAreaSerializer(service_areas, many = True)
 
