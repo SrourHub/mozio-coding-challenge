@@ -1,9 +1,12 @@
+from ast import Pass
+import json
 from django.shortcuts import render
 from .models import Provider, ServiceArea
 from .serializers import ProviderSerializer, ServiceAreaSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from shapely.geometry import Point, Polygon
 
 @api_view(['GET', 'POST'])
 def provider_list(request, format=None):
@@ -25,7 +28,7 @@ def provider_details(request, id,format=None):
     try:
         provider = Provider.objects.get(pk=id)
     except Provider.DoesNotExist:
-        return Response(status= status.HTTP_404_NOT_FOUND)
+        return Response(status= status.HTTP_200_OK)
 
     if request.method == 'GET':
         serializer = ProviderSerializer(provider)
@@ -39,7 +42,7 @@ def provider_details(request, id,format=None):
 
     elif request.method == 'DELETE':
         provider.delete()
-        return Response(status = status.HTTP_204_NO_CONTENT)
+        return Response(status = status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def service_area_list(request,format=None):
@@ -61,7 +64,7 @@ def service_area_details(request, id,format=None):
     try:
         service_area = ServiceArea.objects.get(pk=id)
     except ServiceArea.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
+        return Response(status = status.HTTP_200_OK)
 
     if request.method == 'GET':
         serializer = ServiceArea(service_area)
@@ -72,9 +75,27 @@ def service_area_details(request, id,format=None):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'Delete':
+    elif request.method == 'DELETE':
         service_area.delete()
-        return Response(status = status.HTTP_204_NO_CONTENT)
+        return Response(status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def service_areas_that_contain_given_lat_lng(request,lat,lng,format=None):
+    point = Point(float(lat),float(lng))
+    service_areas = ServiceArea.objects.all()
+    serializer = ServiceAreaSerializer(service_areas, many = True)
+
+    service_areas_that_contain_polygon = []
+    for service_area in serializer.data:
+        for key, value in service_area.items():
+            if key == 'geojson_information':
+                coordinates = value['coordinates']
+                polygon = Polygon([tuple(x) for x in coordinates])
+                if point.within(polygon):
+                    service_areas_that_contain_polygon.append(service_area)
+
+    return Response(service_areas_that_contain_polygon, status=status.HTTP_200_OK)
+
 
 
 

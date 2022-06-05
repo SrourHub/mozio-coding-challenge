@@ -17,7 +17,7 @@ class ServiceArea(models.Model):
 
     name = models.CharField(max_length = 50)
     price = models.FloatField()
-    geojson_information = models.CharField(max_length=200)
+    geojson_information = models.JSONField("GEOJSON_INFORMATION")
 
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
 
