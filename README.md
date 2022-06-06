@@ -9,7 +9,7 @@ Provider Endpoints:
     To get a provider or update a provider or delete a provider (GET, PUT AND DELETE):
         * https://backend-project-deployment.herokuapp.com/providers/<id>
 
-Service Area Endpoints
+Service Area Endpoints:
 
     To get all service areas or to add a new service area (GET AND POST):
         * https://backend-project-deployment.herokuapp.com/service_areas/
